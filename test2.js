@@ -22,14 +22,24 @@ const {
 
 
 (async () => {
-
+    var website = 'https://www.github.com';
     const cookieJar = new CookieJar();
-    const setCookie = cookieJar.setCookie.bind(cookieJar);
-    const website = 'https://www.github.com'
+    const setCookie = cookieJar.setCookie.bind(cookieJar);    
     await setCookie('foo=bar', website);
     await got(website, {
         cookieJar
     });
     console.log(cookieJar.getCookies(website))
 
+})();
+
+(async () => {
+    var website = 'https://www.github.com';
+    const cookieJar = new CookieJar();
+    const setCookie = promisify(cookieJar.setCookie.bind(cookieJar));      
+    await setCookie('test1=firstTest', website);
+    await setCookie('test2=secondTest', website);
+    await setCookie('test3=thirdTest', website);
+    await got(website, {cookieJar});
+    console.log(cookieJar.getCookies(website))  
 })();

@@ -1,5 +1,5 @@
 #features / cookies.feature
-Feature: firstGet
+Feature: thirdGet
 
  Scenario: Deletes one cookie
     Given A set of one cookie

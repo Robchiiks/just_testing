@@ -6,30 +6,73 @@ import got from 'got';
 import {cookie} from 'request';
 import util from 'util';
 
+
 @binding()
 export class CookieSteps {
-  public cookieJar = new CookieJar();
   
+  
+  // public testCookies = new CookieJar();
   public website: string= 'https://www.github.com';
+  public cookie1: string = '';
+  public cookie2: string = '';
+  public cookie3: string = '';
+  public assertCookieJar: string[] = new Array();
+
   @given(/A set of three cookies/)  
-  public GetThoseThreeCookies(cookiesApplied: boolean) {
-    (async () => {
-      const setCookie = this.cookieJar.setCookie.bind(this.cookieJar);
-      setCookie('cookie1=test1', this.website);
-      setCookie('cookie2=test2', this.website);
-      setCookie('cookie3=test3', this.website);
-      this.cookieJar = new CookieJar();
-      got(this.website, {this.cookieJar});
-      console.log(this.cookieJar.getCookies(this.website));
-    })();
+  public GetThoseThreeCookies() {    
+      // //var website = 'https://www.github.com';
+      // const cookieJar = new CookieJar();
+      // const setCookie = util.promisify(cookieJar.setCookie.bind(cookieJar));      
+      // setCookie('test1=firstTest', this.website);
+      // setCookie('test2=secondTest', this.website);
+      // setCookie('test3=thirdTest', this.website);
+      // got(this.website, {cookieJar});
+      // console.log(cookieJar.getCookies(this.website))  
+       this.cookie1 = 'test1=firstTest';
+      this.cookie2 = 'test2=secondTest';
+       this.cookie3 = 'test3=thirdTest';
+    return;
   }
 
   @when(/Making a GET call/)
-  public MakingGETcall(cookiesFound: boolean) { 
+  public MakingGETcall() { 
+    (async () => {
     const cookieJar = new CookieJar();
-    const setCookie = util.promisify(cookieJar.setCookie.bind(cookieJar));
- 
-     setCookie('foo=bar', 'https://example.com');
-     got('https://example.com', {cookieJar});
+    const setCookie = util.promisify(cookieJar.setCookie.bind(cookieJar));      
+    setCookie(this.cookie1, this.website);
+    setCookie(this.cookie2, this.website);
+    setCookie(this.cookie3, this.website);
+    got(this.website, {cookieJar});
+    console.log(cookieJar.getCookiesSync(this.website));
+    console.log('breajk')
+    console.log(typeof cookieJar.getCookiesSync(this.website));
+    // this.assertCookieJar.push.apply(this.assertCookieJar, cookieJar);
+    // Array.prototype.push.apply(this.assertCookieJar, cookieJar);
+    this.assertCookieJar = Object.assign(this.assertCookieJar, cookieJar);
+    console.log('TEST')   
+    // console.log(this.assertCookieJar);
+    return;
+  })();
+   
   }
+  @then(/expect to have set of three cookies added/)
+  public assertCookiesAdded() {
+    console.log('teeeeest')
+    // delete this.assertCookieJar['test1'];
+    console.log(clean(this.assertCookieJar,"test1"))
+    
+  }
+}
+
+function clean(obj: { [x: string]: any; },target: string) {
+  var tmpobj = obj;
+  for (var key in tmpobj) {
+      if (key === target) {
+          delete obj[key];
+      }
+      else if (typeof obj[key] === "object") {
+          obj[key] = clean(obj[key],target); 
+      }
+  }
+  return obj;
 }

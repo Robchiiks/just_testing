@@ -1,5 +1,5 @@
 #features / cookies.feature
-Feature: firstGet
+Feature: secondGet
 
 Scenario: Expect previous cookies
     Given A second response
